@@ -9,19 +9,17 @@ function GameModel(size, similar) {
 }
 GameModel.prototype = {
     _createArrColors: function () {
-        var concatColorsArr = [],
-                ColorsArr = [],
-                countItems = this.size * this.size,
-                oneArrColors = (this.size * this.size) / this.similar;
-        for (var j = 0; j < oneArrColors; j++) {
-            ColorsArr.push("#" + Math.random().toString(16).slice(2, 8));
+        var a1 = [],
+                a2 = (this.size * this.size) / this.similar;
+        for (var j = 0; j < a2; j++) {
+            a1.push("#" + Math.random().toString(16).slice(2, 8));
         }
         for (var i = 0; i < this.similar; i++) {
-            concatColorsArr = ColorsArr.concat(concatColorsArr);
+            this.arrColors = a1.concat(this.arrColors);
         }
-        concatColorsArr.sort(compareRandom);
-        this.arrColors = concatColorsArr;
-        return concatColorsArr;
+        this.arrColors.sort(function () {
+            return Math.random() - 0.5;
+        });
     },
     _buildArr: function () {
         for (var i = 0; i < this.size * this.size; i++) {
@@ -31,19 +29,15 @@ GameModel.prototype = {
             }).appendTo("#zone");
         }
         this.items = $('.square');
+    },
+    _setCubeWidth: function () {
         var itemW = this.items.outerWidth(true),
                 zoneW = itemW * this.size;
         $("#zone").css({
             width: zoneW
         });
     },
-    _endGame: function () {
-        if (this.successArr.length === (this.size * this.size)) {
-            alert('Finish');
-        }
-    },
     _compareItems: function () {
-
         if (this._checkOnSimilar()) {
             if (this.arrProp.length === this.similar) {
                 for (var i in this.arrProp) {
@@ -74,16 +68,6 @@ GameModel.prototype = {
             }
         }
         return true;
-        //else {
-        //  this._refresh(this.items.eq(this.arrProp[i]));
-        //}
-    },
-    _clickOnDifferent: function () {
-        for (var i in this.arrProp) {
-            if (this.arrColors[this.arrProp[0]] !== this.arrColors[this.arrProp[++i]]) {
-                return true;
-            }
-        }
     },
     _refresh: function (diffItem) {
         setTimeout(function () {
@@ -97,6 +81,11 @@ GameModel.prototype = {
                 'background-color': ''
             });
         }, 1000);
+    },
+    _endGame: function () {
+        if (this.successArr.length === (this.size * this.size)) {
+            alert('Finish');
+        }
     }
 };
 
@@ -106,6 +95,7 @@ function GameController() {
     this.startGame = function () {
         _model._createArrColors();
         _model._buildArr();
+        _model._setCubeWidth();
         _model._refreshAll();
     };
     this.clickOnElement = function () {
@@ -124,11 +114,6 @@ GameController.prototype.init = function () {
     });
     self.clickOnElement();
 };
-
-function compareRandom() {
-    return Math.random() - 0.5;
-}
-
 
 $(document).ready(function () {
     new GameController().init();
