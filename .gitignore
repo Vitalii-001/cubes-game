@@ -1,0 +1,6 @@
+/nbproject/*
+/nbproject
+/app
+/app/*
+/node_modules
+/gulpfile.js
