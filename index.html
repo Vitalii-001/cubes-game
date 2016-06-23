@@ -8,61 +8,15 @@
         <meta name="viewport" content="width=device-width,user-scalable=0,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0">
         <script type="text/javascript" src="js/jquery-2.1.3.min.js"></script>
         <script type="text/javascript" src="js/app.js"></script>
-        <style type="text/css">
-            .game {
-                position: relative;
-                width: 50%;
-                height: 50%;
-                text-align: center;
-            }
-            #zone {
-                /*width: 220px;*/
-                font-size: 0;
-                margin: 0 auto;
-                position: relative;
-                margin-top: 20px;
-            }
-            .startGame {
-                /*position: absolute; left:50%; top:10%; margin-left:-40px;*/ 
-            }
-            .square {
-                cursor: pointer;
-                display: inline-block;
-                width: 50px;
-                height: 50px;
-                background-color: #777;
-                margin: 2px;
-                transition: all 0.5s ease;
-                -webkit-transition: all 0.5s ease;
-            }
-            .square.is-visible {
-                transform: rotateY(180deg);
-            }
-            .finish {
-                font-size: 30px;
-                color: #278436;
-            }
-            #timer {
-                border: 1px solid #ccc;
-                border-radius: 4px;
-                height: 8px;
-                width: 300px;
-                margin: 0 auto;
-                margin-top: 20px;
-                visibility: hidden;
-            }
-            #timerIndicator {
-                display: block;
-                border-radius: 4px;
-                background: green;
-                height: 100%;
-            }
-        </style>
+        <link rel="stylesheet" type="text/css" href="css/main.css" media="all" />
     </head>
     <body>
         <div class="game">    
             <button type="button" class="startGame">Start game</button>
             <button disabled="disabled" type="button" class="refreshGame">Refresh game</button>
+            <div style="margin-top: 10px;">Round <span id="round">1</span></div>
+            <div style="margin-top: 10px;display: inline-block;">Round Points <span id="roundPoints">0</span></div>&nbsp;&nbsp;&nbsp;&nbsp;
+            <div style="margin-top: 10px;display: inline-block;">Total Points <span id="totalPoints">0</span></div>
             <div id="zone"></div>
             <div id="timer"><span id="timerIndicator"></span></div>
         </div>

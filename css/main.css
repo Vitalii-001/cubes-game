@@ -1,0 +1,51 @@
+.game {
+    position: relative;
+    width: 50%;
+    height: 50%;
+    text-align: center;
+}
+#zone {
+    /*width: 220px;*/
+    font-size: 0;
+    margin: 0 auto;
+    position: relative;
+    margin-top: 20px;
+}
+.startGame {
+    /*position: absolute; left:50%; top:10%; margin-left:-40px;*/ 
+}
+.square {
+    cursor: pointer;
+    display: inline-block;
+    width: 50px;
+    height: 50px;
+    background-color: #777;
+    margin: 2px;
+    transition: all 0.5s ease;
+    -webkit-transition: all 0.5s ease;
+}
+.square.is-visible {
+    transform: rotateY(180deg);
+}
+.finish {
+    font-size: 30px;
+    color: #278436;
+}
+#timer {
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    height: 8px;
+    width: 300px;
+    margin: 0 auto;
+    margin-top: 20px;
+    visibility: hidden;
+}
+#timerIndicator {
+    display: block;
+    border-radius: 4px;
+    background: green;
+    height: 100%;
+}
+#points {
+    margin-top: 5px;
+}

@@ -4,14 +4,18 @@ function GameModel(configs) {
         container: $('#zone'),
         size: 4,
         similar: 2,
-        timeStartShow: 2000,
-        timeLimit: 2
+        timeStartShow: 1000,
+        timeLimit: 2,
+        rounds: 3
     }, configs);
     this.compareAr = [];
     this.arrColors = [];
     this.arrProp = [];
     this.successArr = [];
-};
+    this.currentRoundPoints = 0;
+    this.currentRound = 1;
+}
+;
 GameModel.prototype = {
     _createArrColors: function () {
         var a1 = [],
@@ -45,12 +49,14 @@ GameModel.prototype = {
     _compareItems: function () {
         if (this._checkOnSimilar()) {
             if (this.arrProp.length === this.configs.similar) {
+                this._roundPoints(true, false);
                 for (var i in this.arrProp) {
                     this.successArr.push(1);
                 }
                 this.arrProp = [];
             }
         } else {
+            this._roundPoints(false, true);
             for (var i in this.arrProp) {
                 this._refreshDifferent(this.items.eq(this.arrProp[i]));
             }
@@ -92,6 +98,8 @@ GameModel.prototype = {
         this.arrProp = [];
         this.successArr = [];
         this.arrColors = [];
+        this.currentRoundPoints = 0;
+        $('#roundPoints').html(0);
         this.items.remove();
         this._createArrColors();
         this._buildArr();
@@ -102,6 +110,14 @@ GameModel.prototype = {
             'background-color': 'green'
         });
         this._setTimeLimit();
+    },
+    _nextRound: function () {
+        var countR = $('#round');
+        if (this.currentRound === this.configs.rounds) {
+            return false;
+        }
+        this.currentRound++;
+        countR.html(this.currentRound);
     },
     _buttonStatus: function () {
         $('.startGame').attr('disabled', 'disabled');
@@ -165,16 +181,38 @@ GameModel.prototype = {
             $('.refreshGame').attr('disabled', 'disabled');
         }
     },
-    _endGame: function () {
+    _roundPoints: function (right, wrong) {
+        var countRP = $('#roundPoints');
+        if (right === true) {
+            this.currentRoundPoints += 5;
+            countRP.html(this.currentRoundPoints);
+        }
+        else if (wrong === true) {
+            this.currentRoundPoints--;
+            countRP.html(this.currentRoundPoints);
+        }
+    },
+    _endRound: function () {
         if (this.successArr.length === (this.configs.size * this.configs.size)) {
-            if (confirm('Finish, play again?')) {
-                this._refreshGame();
-            } else {
-                clearInterval(globalInterval);
-                $(document).off('click', '.square');
-                $('.refreshGame').attr('disabled', 'disabled');
+            if (this.configs.rounds !== this.currentRound) {
+                if (confirm('Next round?')) {
+                    this._refreshGame();
+                    this._nextRound();
+                }
+                else {
+                    this._lockGame();
+                }
+            }
+            else {
+                this._lockGame();
+                alert("Congratulation!!!, yuor total points " + this.currentRoundPoints + " ");
             }
         }
+    },
+    _lockGame: function () {
+        clearInterval(globalInterval);
+        $(document).off('click', '.square');
+        $('.refreshGame').attr('disabled', 'disabled');
     }
 };
 
@@ -184,8 +222,9 @@ function GameController() {
         container: $('#zone'),
         size: 3,
         similar: 3,
-        timeStartShow: 2000,
-        timeLimit: 1 //minutes
+        timeStartShow: 1000,
+        timeLimit: 1, //minutes
+        rounds: 2
     });
     this.startGame = function () {
         _model._buttonStatus();
@@ -203,7 +242,7 @@ function GameController() {
             var $thisItem = $(this);
             _model._setColorItem($thisItem);
             _model._compareItems();
-            _model._endGame();
+            _model._endRound();
         });
     };
 }
