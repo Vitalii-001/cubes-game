@@ -8,23 +8,33 @@ function GameModel(configs) {
         timeLimit: 2,
         rounds: 3
     }, configs);
-    this.compareAr = [];
     this.arrColors = [];
     this.arrProp = [];
     this.successArr = [];
     this.currentRoundPoints = 0;
+    this.totalPoints = 0;
     this.currentRound = 1;
 }
-;
 GameModel.prototype = {
     _createArrColors: function () {
-        var a1 = [],
-                a2 = (this.configs.size * this.configs.size) / this.configs.similar;
-        for (var j = 0; j < a2; j++) {
-            a1.push("#" + Math.random().toString(16).slice(2, 8));
-        }
-        for (var i = 0; i < this.configs.similar; i++) {
-            this.arrColors = a1.concat(this.arrColors);
+        var params = {
+            sc: $('#simpleColors'),
+            hc: $('#heavyColors'),
+            hue: ['red', 'orange', 'yellow', 'green', 'blue', 'purple', 'pink', 'monochrome'],
+            c: (this.configs.size * this.configs.size) / this.configs.similar
+        };
+        if (params.sc.is(':checked')) {
+            var rc = randomColor({count: params.c});
+            for (var i = 0; i < this.configs.similar; i++) {
+                this.arrColors = rc.concat(this.arrColors);
+            }
+        } else if (params.hc.is(':checked')) {
+            var rhc = Math.random() * ((params.hue.length-1));
+            rhc = Math.round(rhc);
+            var rc = randomColor({hue: params.hue[rhc], count: params.c});
+            for (var i = 0; i < this.configs.similar; i++) {
+                this.arrColors = rc.concat(this.arrColors);
+            }
         }
         this.arrColors.sort(function () {
             return Math.random() - 0.5;
@@ -41,7 +51,7 @@ GameModel.prototype = {
     },
     _setCubeWidth: function () {
         var itemW = this.items.outerWidth(true),
-                zoneW = itemW * this.configs.size;
+            zoneW = itemW * this.configs.size;
         $(this.configs.container).css({
             width: zoneW
         });
@@ -49,14 +59,16 @@ GameModel.prototype = {
     _compareItems: function () {
         if (this._checkOnSimilar()) {
             if (this.arrProp.length === this.configs.similar) {
-                this._roundPoints(true, false);
+                this._gamePoints(true, false);
+                // this._totalPoints();
                 for (var i in this.arrProp) {
                     this.successArr.push(1);
                 }
                 this.arrProp = [];
             }
         } else {
-            this._roundPoints(false, true);
+            this._gamePoints(false, true);
+            // this._totalPoints();
             for (var i in this.arrProp) {
                 this._refreshDifferent(this.items.eq(this.arrProp[i]));
             }
@@ -93,8 +105,7 @@ GameModel.prototype = {
             });
         }, this.configs.timeStartShow);
     },
-    _refreshGame: function () {
-        this.clickOnElement;
+    _refreshRound: function () {
         this.arrProp = [];
         this.successArr = [];
         this.arrColors = [];
@@ -125,13 +136,13 @@ GameModel.prototype = {
     },
     _setTimeLimit: function () {
         var a = this.configs.timeLimit,
-                b = a * 60 * 100,
-                c = 100 / b,
-                d = 0,
-                e = 0,
-                f = $('#timerIndicator'),
-                g = $('#timer'),
-                self = this;
+            b = a * 60 * 100,
+            c = 100 / b,
+            d = 0,
+            e = 0,
+            f = $('#timerIndicator'),
+            g = $('#timer'),
+            self = this;
         setTimeout(function () {
             globalInterval = setInterval(function () {
                 e += c;
@@ -173,7 +184,7 @@ GameModel.prototype = {
                 'width': '100%',
                 'background-color': 'green'
             });
-            this._refreshGame();
+            this._refreshRound();
             clearInterval(globalInterval);
         } else {
             clearInterval(globalInterval);
@@ -181,22 +192,28 @@ GameModel.prototype = {
             $('.refreshGame').attr('disabled', 'disabled');
         }
     },
-    _roundPoints: function (right, wrong) {
-        var countRP = $('#roundPoints');
+    _gamePoints: function (right, wrong) {
+        var rp = $('#roundPoints'),
+            tp = $('#totalPoints');
         if (right === true) {
             this.currentRoundPoints += 5;
-            countRP.html(this.currentRoundPoints);
+            this.totalPoints += 5;
+            rp.html(this.currentRoundPoints);
+            tp.html(this.totalPoints)
         }
         else if (wrong === true) {
             this.currentRoundPoints--;
-            countRP.html(this.currentRoundPoints);
+            this.totalPoints--;
+            rp.html(this.currentRoundPoints);
+            tp.html(this.totalPoints);
         }
     },
     _endRound: function () {
         if (this.successArr.length === (this.configs.size * this.configs.size)) {
             if (this.configs.rounds !== this.currentRound) {
                 if (confirm('Next round?')) {
-                    this._refreshGame();
+                    this.configs.timeLimit /= 2;
+                    this._refreshRound();
                     this._nextRound();
                 }
                 else {
@@ -205,7 +222,7 @@ GameModel.prototype = {
             }
             else {
                 this._lockGame();
-                alert("Congratulation!!!, yuor total points " + this.currentRoundPoints + " ");
+                alert("Congratulation!!!, Total points  " + this.totalPoints + " ");
             }
         }
     },
@@ -224,7 +241,7 @@ function GameController() {
         similar: 3,
         timeStartShow: 1000,
         timeLimit: 1, //minutes
-        rounds: 2
+        rounds: 3
     });
     this.startGame = function () {
         _model._buttonStatus();
@@ -235,7 +252,7 @@ function GameController() {
         _model._setTimeLimit();
     };
     this.refreshGame = function () {
-        _model._refreshGame();
+        _model._refreshRound();
     };
     this.clickOnElement = function () {
         $(document).on('click', '.square', function () {

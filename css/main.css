@@ -4,6 +4,16 @@
     height: 50%;
     text-align: center;
 }
+.frame-label {
+    margin-bottom: 20px;
+}
+.frame-label > div {
+    margin-bottom: 5px;
+}
+.frame-label .title {
+    font-weight:bold;
+    margin-bottom: 5px;
+}
 #zone {
     /*width: 220px;*/
     font-size: 0;
