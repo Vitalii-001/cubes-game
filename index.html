@@ -14,34 +14,47 @@
 <body>
 <div class="game">
     <h3>Select game parameters</h3>
-    <div class="frame-label">
-        <div class="title">Colors</div>
-        <div>
-            <label for="simpleColors">Simple colors</label>
-            <input checked="checked" id="simpleColors" type="radio" name="colors"/>
+    <div class="game-parameters">
+        <div class="frame-label">
+            <div class="title">Difficulty</div>
+            <div>
+                <label for="beginner">Beginner</label>
+                <input checked="checked" id="beginner" type="radio" name="difficulty"/>
+            </div>
+            <div>
+                <label for="intermediate">Intermediate</label>
+                <input id="intermediate" type="radio" name="difficulty"/>
+            </div>
+            <div>
+                <label for="expert">Expert</label>
+                <input id="expert" type="radio" name="difficulty"/>
+            </div>
         </div>
-        <div>
-            <label for="heavyColors">Heavy colors</label>
-            <input id="heavyColors" type="radio" name="colors"/>
+        <div class="frame-label">
+            <div class="title">Colors Category</div>
+            <div>
+                <label for="simpleColors">Random colors</label>
+                <input checked="checked" id="simpleColors" type="radio" name="colors"/>
+            </div>
+            <div>
+                <label for="heavyColors">Heavy colors</label>
+                <input id="heavyColors" type="radio" name="colors"/>
+            </div>
+        </div>
+        <div class="frame-label">
+            <div class="title">Similar Colors</div>
+            <div>
+                <label for="threeColors">3</label>
+                <input checked="checked" id="threeColors" type="radio" name="similar"/>
+            </div>
+            <div>
+                <label for="twoColors">2</label>
+                <input id="twoColors" type="radio" name="similar"/>
+            </div>
         </div>
     </div>
-    <div class="frame-label">
-        <div class="title">Difficulty</div>
-        <div>
-            <label for="beginner">Beginner</label>
-            <input checked="checked" id="beginner" type="radio" name="difficulty"/>
-        </div>
-        <div>
-            <label for="intermediate">Intermediate</label>
-            <input id="intermediate" type="radio" name="difficulty"/>
-        </div>
-        <div>
-            <label for="expert">Expert</label>
-            <input id="expert" type="radio" name="difficulty"/>
-        </div>
-    </div>
-    <button type="button" class="startGame">Start game</button>
-    <button disabled="disabled" type="button" class="refreshGame">Refresh game</button>
+    <button type="button" class="startGame">Start Game</button>
+    <button disabled="disabled" type="button" class="refreshGame">Refresh Round</button>
     <div style="margin-top: 10px;">Round <span id="round">1</span></div>
     <div style="margin-top: 10px;display: inline-block;">Round Points <span id="roundPoints">0</span></div>
     &nbsp;&nbsp;&nbsp;&nbsp;
